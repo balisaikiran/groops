@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '@/context/AuthContext';
 import { useGroups } from '@/context/GroupContext';
 import { router } from 'expo-router';
-import { LogOut, Settings, Users, MessageCircle, Edit3, Mail } from 'lucide-react-native';
+import { LogOut, Settings, Users, MessageCircle, CreditCard as Edit3, Mail } from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
