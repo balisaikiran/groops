@@ -5,6 +5,7 @@ type User = {
   id: string;
   username: string;
   email: string;
+  avatar?: string;
 };
 
 type AuthContextType = {
@@ -22,7 +23,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
     const loadUser = async () => {
       try {
         const userData = await AsyncStorage.getItem('user');
@@ -39,15 +39,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loadUser();
   }, []);
 
-  // In a real app, these functions would make API calls to your backend
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
       // Mock login - in a real app, this would be an API call
       const mockUser = {
         id: '1',
-        username: 'testuser',
+        username: email.split('@')[0],
         email: email,
+        avatar: `https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2`,
       };
       
       await AsyncStorage.setItem('user', JSON.stringify(mockUser));
@@ -69,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: Date.now().toString(),
         username,
         email,
+        avatar: `https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2`,
       };
       
       await AsyncStorage.setItem('user', JSON.stringify(mockUser));

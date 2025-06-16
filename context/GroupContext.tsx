@@ -8,8 +8,8 @@ type Message = {
   userId: string;
   username: string;
   timestamp: number;
-  parentId?: string; // For threaded replies
-  replies?: string[]; // IDs of reply messages
+  parentId?: string;
+  replies?: string[];
 };
 
 type Group = {
@@ -19,6 +19,8 @@ type Group = {
   createdBy: string;
   members: string[];
   messages: Message[];
+  avatar?: string;
+  color?: string;
 };
 
 type GroupContextType = {
@@ -33,6 +35,14 @@ type GroupContextType = {
 };
 
 const GroupContext = createContext<GroupContextType | undefined>(undefined);
+
+const groupColors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
+const groupAvatars = [
+  'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+  'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+  'https://images.pexels.com/photos/3184293/pexels-photo-3184293.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+  'https://images.pexels.com/photos/3184294/pexels-photo-3184294.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+];
 
 export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [groups, setGroups] = useState<Group[]>([]);
@@ -50,20 +60,32 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const initialGroups: Group[] = [
             {
               id: '1',
-              name: 'General',
-              description: 'General discussion group',
+              name: 'General Discussion',
+              description: 'A place for general conversations and announcements',
               createdBy: 'system',
               members: user ? [user.id] : [],
+              avatar: groupAvatars[0],
+              color: groupColors[0],
               messages: [
                 {
                   id: '1',
-                  text: 'Welcome to the General group!',
+                  text: 'Welcome to the General Discussion group! 👋',
                   userId: 'system',
                   username: 'System',
-                  timestamp: Date.now(),
+                  timestamp: Date.now() - 86400000,
                   replies: []
                 }
               ]
+            },
+            {
+              id: '2',
+              name: 'Tech Talk',
+              description: 'Discuss the latest in technology and development',
+              createdBy: 'system',
+              members: user ? [user.id] : [],
+              avatar: groupAvatars[1],
+              color: groupColors[1],
+              messages: []
             }
           ];
           await AsyncStorage.setItem('groups', JSON.stringify(initialGroups));
@@ -99,7 +121,9 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       description,
       createdBy: user.id,
       members: [user.id],
-      messages: []
+      messages: [],
+      avatar: groupAvatars[Math.floor(Math.random() * groupAvatars.length)],
+      color: groupColors[Math.floor(Math.random() * groupColors.length)],
     };
 
     const updatedGroups = [...groups, newGroup];
@@ -167,7 +191,6 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       const updatedGroups = groups.map(group => {
         if (group.id === groupId) {
-          // If this is a reply to a parent message, update the parent's replies array
           if (parentId) {
             const updatedMessages = group.messages.map(msg => {
               if (msg.id === parentId) {
@@ -185,7 +208,6 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             };
           }
           
-          // Otherwise, just add the new message
           return {
             ...group,
             messages: [...group.messages, newMessage]
@@ -206,7 +228,6 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const group = groups.find(g => g.id === groupId);
     if (!group) return [];
     
-    // Return only top-level messages (not replies)
     return group.messages.filter(msg => !msg.parentId);
   };
 
@@ -214,11 +235,6 @@ export const GroupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const group = groups.find(g => g.id === groupId);
     if (!group) return [];
     
-    // Get the parent message
-    const parentMessage = group.messages.find(msg => msg.id === parentMessageId);
-    if (!parentMessage) return [];
-    
-    // Get all replies to this message
     return group.messages.filter(msg => msg.parentId === parentMessageId);
   };
 
