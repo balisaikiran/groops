@@ -11,16 +11,17 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
-    "expo": "~53.0.9",
+    "expo": "~52.0.30",
     "expo-router": "~4.0.17",
     "expo-status-bar": "~2.2.3",
     "expo-font": "~13.0.1",
     "@expo-google-fonts/inter": "^0.2.3",
     "expo-linear-gradient": "~14.0.1",
     "expo-blur": "~14.0.1",
-    "lucide-react-native": "^0.447.0",
-    "react": "19.0.0",
-    "react-native": "0.79.2",
+    "expo-splash-screen": "~0.29.16",
+    "lucide-react-native": "^0.460.0",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "^5.4.0",
@@ -30,7 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@react-native-community/cli": "^18.0.0",
-    "@types/react": "~19.0.10",
+    "@types/react": "~18.3.12",
     "typescript": "~5.8.3"
   },
   "private": true
